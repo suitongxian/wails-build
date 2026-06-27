@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>立项书 · 正式/隆重版方案</title>
+<style>
+  :root{
+    --red:#b01c1c;
+    --red-deep:#8a1414;
+    --navy:#1a2e4a;
+    --gold:#b8860b;
+    --ink:#1d2126;
+    --paper:#fdfcf8;
+    --line:#dcd6c8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:#e9ebef;color:var(--ink);padding:32px 16px 80px;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  .pagehead{max-width:760px;margin:0 auto 8px;}
+  .pagehead h1{font-size:20px;margin:0 0 4px;}
+  .pagehead p{margin:0;color:#6b7280;font-size:13px;}
+  .variant{max-width:760px;margin:44px auto 0;}
+  .vlabel{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;padding-left:2px;}
+  .vlabel .tag{font-size:12px;font-weight:700;color:#fff;border-radius:4px;padding:2px 9px;}
+  .vlabel h2{font-size:16px;margin:0;}
+  .vlabel span{font-size:12px;color:#6b7280;}
+
+  /* 文档纸张外壳 */
+  .sheet{background:var(--paper);box-shadow:0 14px 44px rgba(20,30,50,.22);}
+  .doc{font-family:"Songti SC","SimSun","STSong",serif;}
+  .fill{display:inline-block;border-bottom:1px solid #9a9a8c;min-width:120px;padding:0 6px 2px;font-family:"Songti SC","SimSun",serif;}
+  .fill.long{display:block;border-bottom:none;}
+  .fill.long .ln{display:block;border-bottom:1px solid #c9c3b4;height:26px;line-height:26px;}
+  .frow{display:flex;flex-wrap:wrap;gap:6px 28px;margin:0 0 14px;font-size:15px;line-height:2;}
+  .frow .lab{color:#3a3f47;}
+  .radios{display:inline-flex;gap:18px;}
+  .rad{display:inline-flex;align-items:center;gap:5px;}
+  .rad .box{width:13px;height:13px;border:1px solid #888;display:inline-block;border-radius:50%;}
+  .rad.on .box{border-color:var(--red);background:radial-gradient(circle,var(--red) 45%,#fff 50%);}
+  .rad.on{color:var(--red);font-weight:700;}
+
+  /* 操作条（app 控件，纸外） */
+  .bar{display:flex;justify-content:flex-end;gap:10px;background:#fff;padding:12px 20px;border-top:1px solid #e3e6ec;font-family:-apple-system,"PingFang SC",sans-serif;}
+  .btn{height:36px;border-radius:5px;padding:0 18px;font-size:13.5px;border:1px solid transparent;font-weight:600;}
+  .btn-text{background:transparent;color:#6b7280;}
+  .btn-ghost{background:#fff;border-color:#cfae6a;color:#8a6d1a;}
+  .seal{
+    position:absolute;width:104px;height:104px;border:3px solid rgba(176,28,28,.55);border-radius:50%;
+    color:rgba(176,28,28,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:rotate(-16deg);font-family:"Songti SC","SimSun",serif;
+  }
+  .seal .star{font-size:20px;line-height:1;}
+  .seal .txt{font-size:11px;letter-spacing:2px;margin-top:2px;}
+
+  /* ============ 甲 · 红头文件式 ============ */
+  .jia .body{padding:30px 46px 18px;position:relative;}
+  .jia .org{text-align:center;color:var(--red);font-size:15px;letter-spacing:6px;font-weight:700;}
+  .jia .title{text-align:center;color:var(--red);font-size:34px;font-weight:800;letter-spacing:14px;margin:14px 0 12px;}
+  .jia .redline{height:3px;background:var(--red);margin:2px 0 6px;}
+  .jia .docno{text-align:center;color:#444;font-size:14px;margin:8px 0 22px;}
+  .jia .sec{margin:0 0 14px;}
+  .jia .sec-h{font-size:16px;font-weight:700;color:var(--ink);margin:0 0 8px;}
+  .jia .sign{margin-top:26px;text-align:right;font-size:15px;line-height:2.2;padding-right:8px;}
+  .jia .seal{right:54px;bottom:30px;}
+  .jia .btn-pub{background:var(--red);color:#fff;}
+
+  /* ============ 乙 · 庄重边框（证书感） ============ */
+  .yi .frame{padding:14px;background:var(--paper);}
+  .yi .inner{border:2px solid var(--red);outline:1px solid var(--red);outline-offset:4px;padding:30px 44px 22px;position:relative;}
+  .yi .crest{width:54px;height:54px;border:2px solid var(--red);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;color:var(--red);font-size:24px;}
+  .yi .title{text-align:center;font-size:30px;font-weight:800;letter-spacing:12px;color:var(--red-deep);margin:0 0 6px;}
+  .yi .sub{text-align:center;font-size:11px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+  .yi .docno{text-align:center;color:#555;font-size:13px;margin:6px 0 22px;}
+  .yi .sec{margin:0 0 14px;}
+  .yi .sec-h{font-size:15.5px;font-weight:700;color:var(--ink);border-left:4px solid var(--gold);padding-left:9px;margin:0 0 8px;}
+  .yi .sign{margin-top:24px;text-align:right;font-size:15px;line-height:2.2;}
+  .yi .btn-pub{background:var(--red-deep);color:#fff;}
+
+  /* ============ 丙 · 庄重藏蓝（无红） ============ */
+  .bing .body{padding:30px 46px 18px;position:relative;}
+  .bing .org{text-align:center;color:var(--navy);font-size:14px;letter-spacing:5px;font-weight:700;}
+  .bing .title{text-align:center;color:var(--navy);font-size:32px;font-weight:800;letter-spacing:12px;margin:12px 0 10px;}
+  .bing .dline{border:none;border-top:3px double var(--navy);margin:4px 0 6px;}
+  .bing .docno{text-align:center;color:#555;font-size:13px;margin:8px 0 22px;}
+  .bing .sec{margin:0 0 14px;}
+  .bing .sec-h{font-size:15.5px;font-weight:700;color:var(--navy);margin:0 0 8px;}
+  .bing .sign{margin-top:24px;text-align:right;font-size:15px;line-height:2.2;}
+  .bing .seal{right:54px;bottom:30px;border-color:rgba(26,46,74,.5);color:rgba(26,46,74,.55);}
+  .bing .btn-pub{background:var(--navy);color:#fff;}
+  .bing .rad.on .box{border-color:var(--navy);background:radial-gradient(circle,var(--navy) 45%,#fff 50%);}
+  .bing .rad.on{color:var(--navy);}
+</style>
+</head>
+<body>
+
+<div class="pagehead">
+  <h1>「立项书」· 正式/隆重版 三方案</h1>
+  <p>政府单位气质：宋体公文 + 红头/文号/印章/下划线填空。表单字段做成“填空式”更像正式文书；下方操作条仍是 app 按钮。挑一个或混搭，我再落到真实弹窗。</p>
+</div>
+
+<!-- ============ 甲 ============ -->
+<div class="variant jia">
+  <div class="vlabel"><span class="tag" style="background:var(--red)">方案 甲</span><h2>红头文件式</h2><span>红头抬头 + 红线 + 文号 + 印章，最“官方隆重”</span></div>
+  <div class="sheet doc">
+    <div class="body">
+      <div class="org">（单位名称）</div>
+      <div class="title">项目立项书</div>
+      <div class="redline"></div>
+      <div class="docno">〔2026〕立 第 017 号</div>
+
+      <div class="sec"><div class="sec-h">一、基本信息</div>
+        <div class="frow"><span class="lab">项目名称：</span><span class="fill" style="min-width:340px">城市轨道交通建设档案数字化项目</span></div>
+        <div class="frow"><span class="lab">项目代号：</span><span class="fill">GDJT-2026-017</span></div>
+      </div>
+      <div class="sec"><div class="sec-h">二、责任主体</div>
+        <div class="frow">
+          <span><span class="lab">项目负责人：</span><span class="fill">张　三</span></span>
+          <span><span class="lab">所属部门：</span><span class="fill">第一研究院</span></span>
+        </div>
+      </div>
+      <div class="sec"><div class="sec-h">三、安全定级</div>
+        <div class="frow">
+          <span class="lab">敏感级别：</span>
+          <span class="radios">
+            <span class="rad"><span class="box"></span>核心</span>
+            <span class="rad on"><span class="box"></span>重要</span>
+            <span class="rad"><span class="box"></span>一般</span>
+          </span>
+          <span style="margin-left:18px"><span class="lab">数据权属：</span><span class="fill">市轨道交通建设管理局</span></span>
+        </div>
+      </div>
+      <div class="sec"><div class="sec-h">四、立项依据</div>
+        <span class="fill long"><span class="ln">依据《XX市政务数据资源管理办法》及上级《2026年度数字化建设计划》批文，</span><span class="ln">经研究决定，现就本项目予以立项。</span></span>
+      </div>
+      <div class="sec"><div class="sec-h">五、项目简介</div>
+        <span class="fill long"><span class="ln">对城市轨道交通建设全周期形成的勘察、设计、施工、验收等档案，</span><span class="ln">进行数字化采集、分级与入库治理。</span></span>
+      </div>
+
+      <div class="sign">拟制人：张　三<br>拟制日期：二〇二六年六月九日</div>
+      <div class="seal"><span class="star">★</span><span class="txt">立项专用</span></div>
+    </div>
+    <div class="bar">
+      <button class="btn btn-text">取消</button>
+      <button class="btn btn-ghost">存草稿</button>
+      <button class="btn btn-pub">发&nbsp;布</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 乙 ============ -->
+<div class="variant yi">
+  <div class="vlabel"><span class="tag" style="background:var(--red-deep)">方案 乙</span><h2>庄重边框（证书感）</h2><span>双线红框 + 徽记 + 金红点缀，仪式感最强</span></div>
+  <div class="sheet">
+    <div class="frame"><div class="inner doc">
+      <div class="crest">❖</div>
+      <div class="title">项目立项书</div>
+      <div class="sub">Project&nbsp;Initiation&nbsp;Document</div>
+      <div class="docno">〔2026〕立 第 017 号</div>
+
+      <div class="sec"><div class="sec-h">一、基本信息</div>
+        <div class="frow"><span class="lab">项目名称：</span><span class="fill" style="min-width:340px">城市轨道交通建设档案数字化项目</span></div>
+        <div class="frow"><span class="lab">项目代号：</span><span class="fill">GDJT-2026-017</span></div>
+      </div>
+      <div class="sec"><div class="sec-h">二、责任主体</div>
+        <div class="frow">
+          <span><span class="lab">项目负责人：</span><span class="fill">张　三</span></span>
+          <span><span class="lab">所属部门：</span><span class="fill">第一研究院</span></span>
+        </div>
+      </div>
+      <div class="sec"><div class="sec-h">三、安全定级</div>
+        <div class="frow">
+          <span class="lab">敏感级别：</span>
+          <span class="radios">
+            <span class="rad"><span class="box"></span>核心</span>
+            <span class="rad on"><span class="box"></span>重要</span>
+            <span class="rad"><span class="box"></span>一般</span>
+          </span>
+          <span style="margin-left:18px"><span class="lab">数据权属：</span><span class="fill">市轨道交通建设管理局</span></span>
+        </div>
+      </div>
+      <div class="sec"><div class="sec-h">四、立项依据</div>
+        <span class="fill long"><span class="ln">依据《XX市政务数据资源管理办法》及上级《2026年度数字化建设计划》批文，</span><span class="ln">经研究决定，现就本项目予以立项。</span></span>
+      </div>
+      <div class="sec"><div class="sec-h">五、项目简介</div>
+        <span class="fill long"><span class="ln">对城市轨道交通建设全周期形成的勘察、设计、施工、验收等档案进行数字化治理。</span></span>
+      </div>
+      <div class="sign">拟制人：张　三　　拟制日期：二〇二六年六月九日</div>
+    </div></div>
+    <div class="bar">
+      <button class="btn btn-text">取消</button>
+      <button class="btn btn-ghost">存草稿</button>
+      <button class="btn btn-pub">发&nbsp;布</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 丙 ============ -->
+<div class="variant bing">
+  <div class="vlabel"><span class="tag" style="background:var(--navy)">方案 丙</span><h2>庄重藏蓝（无红）</h2><span>藏蓝宋体 + 双线 + 印章，稳重不张扬</span></div>
+  <div class="sheet doc">
+    <div class="body">
+      <div class="org">（单位名称）</div>
+      <div class="title">项目立项书</div>
+      <hr class="dline">
+      <div class="docno">〔2026〕立 第 017 号</div>
+
+      <div class="sec"><div class="sec-h">一、基本信息</div>
+        <div class="frow"><span class="lab">项目名称：</span><span class="fill" style="min-width:340px">城市轨道交通建设档案数字化项目</span></div>
+        <div class="frow"><span class="lab">项目代号：</span><span class="fill">GDJT-2026-017</span></div>
+      </div>
+      <div class="sec"><div class="sec-h">二、责任主体</div>
+        <div class="frow">
+          <span><span class="lab">项目负责人：</span><span class="fill">张　三</span></span>
+          <span><span class="lab">所属部门：</span><span class="fill">第一研究院</span></span>
+        </div>
+      </div>
+      <div class="sec"><div class="sec-h">三、安全定级</div>
+        <div class="frow">
+          <span class="lab">敏感级别：</span>
+          <span class="radios">
+            <span class="rad"><span class="box"></span>核心</span>
+            <span class="rad on"><span class="box"></span>重要</span>
+            <span class="rad"><span class="box"></span>一般</span>
+          </span>
+          <span style="margin-left:18px"><span class="lab">数据权属：</span><span class="fill">市轨道交通建设管理局</span></span>
+        </div>
+      </div>
+      <div class="sec"><div class="sec-h">四、立项依据</div>
+        <span class="fill long"><span class="ln">依据《XX市政务数据资源管理办法》及上级《2026年度数字化建设计划》批文，经研究决定予以立项。</span></span>
+      </div>
+      <div class="sec"><div class="sec-h">五、项目简介</div>
+        <span class="fill long"><span class="ln">对城市轨道交通建设全周期形成的勘察、设计、施工、验收等档案进行数字化治理。</span></span>
+      </div>
+
+      <div class="sign">拟制人：张　三<br>拟制日期：二〇二六年六月九日</div>
+      <div class="seal"><span class="star">★</span><span class="txt">立项专用</span></div>
+    </div>
+    <div class="bar">
+      <button class="btn btn-text">取消</button>
+      <button class="btn btn-ghost">存草稿</button>
+      <button class="btn btn-pub">发&nbsp;布</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

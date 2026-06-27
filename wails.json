@@ -1,0 +1,13 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "data-asset-scan-go",
+  "outputfilename": "data-asset-scan",
+  "frontend:install": "yarn install --production=false",
+  "frontend:build": "yarn build",
+  "frontend:dev:watcher": "yarn dev",
+  "frontend:dev:serverUrl": "auto",
+  "version": "0.1.6",
+  "info": {
+    "productName": "数据业务治理系统"
+  }
+}

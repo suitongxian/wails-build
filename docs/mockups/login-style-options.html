@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>scan 登录页风格选择</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #172033;
+      --muted: #667085;
+      --line: #d7deea;
+      --page: #f4f7fb;
+      --brand: #2458a6;
+      --brand-2: #0e7490;
+      --ok: #18794e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      background: var(--page);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      max-width: 680px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .selected-pill {
+      min-width: 220px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .selected-pill strong {
+      color: var(--brand);
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .option {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 16px 42px rgba(16, 24, 40, 0.08);
+    }
+
+    .option-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .option-title {
+      min-width: 0;
+    }
+
+    .option-title h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .option-title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .choose {
+      flex: 0 0 auto;
+      height: 36px;
+      padding: 0 14px;
+      border: 1px solid var(--brand);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--brand);
+      cursor: pointer;
+    }
+
+    .choose:hover {
+      background: #eef5ff;
+    }
+
+    .option[data-selected="true"] {
+      border-color: var(--ok);
+      box-shadow: 0 0 0 2px rgba(24, 121, 78, 0.16), 0 16px 42px rgba(16, 24, 40, 0.08);
+    }
+
+    .option[data-selected="true"] .choose {
+      border-color: var(--ok);
+      background: var(--ok);
+      color: #fff;
+    }
+
+    .preview {
+      min-height: 600px;
+      padding: 18px;
+      background: #eef2f7;
+    }
+
+    .login-frame {
+      min-height: 560px;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      height: 44px;
+      margin-bottom: 12px;
+      padding: 0 12px;
+      border: 1px solid rgba(20, 31, 52, 0.2);
+      border-radius: 8px;
+      background: #fff;
+      color: #667085;
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tab {
+      height: 34px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: inherit;
+    }
+
+    .tab.active {
+      font-weight: 700;
+    }
+
+    .primary {
+      width: 100%;
+      height: 44px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .mini-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .mini-line {
+      flex: 1;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .style-a {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      background: #f7f9fc;
+    }
+
+    .style-a .side {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 34px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(17, 55, 99, 0.96), rgba(16, 105, 122, 0.9)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 72px);
+    }
+
+    .style-a .panel {
+      align-self: center;
+      width: min(360px, calc(100% - 36px));
+      padding: 30px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #dbe4ef;
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.12);
+    }
+
+    .style-a .brand {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .style-a h3,
+    .style-b h3,
+    .style-c h3,
+    .style-d h3 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .style-a p,
+    .style-b p,
+    .style-c p,
+    .style-d p {
+      margin: 10px 0 0;
+      color: currentColor;
+      opacity: 0.72;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .style-a .tab.active {
+      color: #2458a6;
+      background: #eef5ff;
+    }
+
+    .style-a .primary {
+      background: #2458a6;
+    }
+
+    .style-b {
+      display: grid;
+      place-items: center;
+      padding: 34px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.74)),
+        linear-gradient(135deg, #e7f0f8, #f7f9fb 44%, #edf6f2);
+    }
+
+    .style-b .panel {
+      width: min(390px, 100%);
+      padding: 34px;
+      border: 1px solid #dbe5ee;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 54px rgba(22, 36, 56, 0.1);
+    }
+
+    .style-b .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .style-b .logo {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: #0e7490;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .style-b .tab.active {
+      color: #0e7490;
+      background: #e9f7f8;
+    }
+
+    .style-b .primary {
+      background: #0e7490;
+    }
+
+    .style-c {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      background: #f4f1eb;
+    }
+
+    .style-c .visual {
+      padding: 34px;
+      background:
+        linear-gradient(180deg, rgba(49, 56, 69, 0.86), rgba(49, 56, 69, 0.72)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 44px);
+      color: #fff;
+    }
+
+    .style-c .shelves {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .style-c .shelf {
+      height: 52px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .style-c .panel {
+      align-self: center;
+      width: min(360px, calc(100% - 34px));
+      margin: 0 auto;
+      padding: 30px;
+      border: 1px solid #d7d0c4;
+      border-radius: 8px;
+      background: #fffdfa;
+      box-shadow: 0 16px 42px rgba(70, 62, 48, 0.12);
+    }
+
+    .style-c .tab.active {
+      color: #7c4f16;
+      background: #f4eadc;
+    }
+
+    .style-c .primary {
+      background: #7c4f16;
+    }
+
+    .style-d {
+      display: grid;
+      grid-template-columns: 0.94fr 1.06fr;
+      background: #0e1726;
+      color: #dbe7ff;
+    }
+
+    .style-d .security {
+      padding: 34px;
+      background:
+        linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(59, 130, 246, 0.1)),
+        #0f172a;
+      border-right: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .style-d .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .style-d .metric {
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(15, 23, 42, 0.74);
+    }
+
+    .style-d .metric span {
+      display: block;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .style-d .metric strong {
+      display: block;
+      margin-top: 6px;
+      color: #e2e8f0;
+      font-size: 18px;
+    }
+
+    .style-d .panel {
+      align-self: center;
+      width: min(370px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 30px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .style-d .field {
+      border-color: rgba(148, 163, 184, 0.28);
+      background: rgba(15, 23, 42, 0.8);
+      color: #94a3b8;
+    }
+
+    .style-d .tab.active {
+      color: #ecfeff;
+      background: rgba(14, 116, 144, 0.32);
+    }
+
+    .style-d .primary {
+      background: #0e7490;
+    }
+
+    @media (max-width: 1080px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 18px;
+      }
+
+      .topbar {
+        display: block;
+      }
+
+      .selected-pill {
+        margin-top: 14px;
+        text-align: left;
+      }
+
+      .style-a,
+      .style-c,
+      .style-d {
+        grid-template-columns: 1fr;
+      }
+
+      .style-a .side,
+      .style-c .visual,
+      .style-d .security {
+        min-height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <h1>scan 登录页风格选择</h1>
+        <p>四个方案只换视觉风格，不改变现有登录、注册、默认服务端地址、登录后跳转等功能逻辑。点击“选择此风格”会在本页记录你的选择，便于后续落到真实页面。</p>
+      </div>
+      <div class="selected-pill" id="selectedText">当前选择：<strong>未选择</strong></div>
+    </header>
+
+    <section class="options">
+      <article class="option" data-option="A">
+        <div class="option-head">
+          <div class="option-title">
+            <h2>A. 政务办公型</h2>
+            <p>延续当前左侧身份说明 + 右侧表单，但更稳重，适合演示政府行业场景。</p>
+          </div>
+          <button class="choose" type="button">选择此风格</button>
+        </div>
+        <div class="preview">
+          <div class="login-frame style-a">
+            <section class="side">
+              <div>
+                <div class="brand">数</div>
+                <h3 style="margin-top: 26px;">数据可信终端</h3>
+                <p>个人电子文件数字助理，围绕扫描、归目、立项和归档形成工作闭环。</p>
+              </div>
+              <div class="mini-list">
+                <div class="mini-row"><span>账号来源</span><span class="mini-line"></span><strong>管理平台</strong></div>
+                <div class="mini-row"><span>本机职责</span><span class="mini-line"></span><strong>扫描归目</strong></div>
+                <div class="mini-row"><span>数据闭环</span><span class="mini-line"></span><strong>项目档案</strong></div>
+              </div>
+            </section>
+            <section class="panel">
+              <h3>登录或注册</h3>
+              <p>使用管理平台账号进入工作台</p>
+              <div class="tabs" style="margin-top: 24px;"><button class="tab active">登录</button><button class="tab">注册</button></div>
+              <div class="field">登录账号</div>
+              <div class="field">登录密码</div>
+              <button class="primary">进入工作台</button>
+            </section>
+          </div>
+        </div>
+      </article>
+
+      <article class="option" data-option="B">
+        <div class="option-head">
+          <div class="option-title">
+            <h2>B. 极简清爽型</h2>
+            <p>去掉强叙事背景，页面更轻，适合把注意力集中在账号操作上。</p>
+          </div>
+          <button class="choose" type="button">选择此风格</button>
+        </div>
+        <div class="preview">
+          <div class="login-frame style-b">
+            <section class="panel">
+              <div class="logo-row">
+                <div class="logo">S</div>
+                <div>
+                  <h3 style="font-size: 22px;">scan 工作台</h3>
+                  <p style="margin-top: 3px;">个人电子文件数字助理</p>
+                </div>
+              </div>
+              <div class="tabs"><button class="tab active">登录</button><button class="tab">注册</button></div>
+              <div class="field">登录账号</div>
+              <div class="field">登录密码</div>
+              <button class="primary">进入工作台</button>
+              <p style="text-align: center;">服务端地址使用系统默认配置</p>
+            </section>
+          </div>
+        </div>
+      </article>
+
+      <article class="option" data-option="C">
+        <div class="option-head">
+          <div class="option-title">
+            <h2>C. 档案柜台型</h2>
+            <p>更贴近“文件柜、卷宗、档案”的产品定位，视觉上更行业化。</p>
+          </div>
+          <button class="choose" type="button">选择此风格</button>
+        </div>
+        <div class="preview">
+          <div class="login-frame style-c">
+            <section class="visual">
+              <h3>电子文件<br>归目与建账</h3>
+              <p>把个人工作文件接入项目卷宗，形成可追溯、可归档的资产底账。</p>
+              <div class="shelves">
+                <div class="shelf"></div>
+                <div class="shelf"></div>
+                <div class="shelf"></div>
+              </div>
+            </section>
+            <section class="panel">
+              <h3>账户接入</h3>
+              <p>登录后进入本机扫描与归目工作台</p>
+              <div class="tabs" style="margin-top: 24px;"><button class="tab active">登录</button><button class="tab">注册</button></div>
+              <div class="field">登录账号</div>
+              <div class="field">登录密码</div>
+              <button class="primary">进入工作台</button>
+            </section>
+          </div>
+        </div>
+      </article>
+
+      <article class="option" data-option="D">
+        <div class="option-head">
+          <div class="option-title">
+            <h2>D. 深色安全型</h2>
+            <p>突出安全、审计、可信终端感，适合强调安全管控的演示。</p>
+          </div>
+          <button class="choose" type="button">选择此风格</button>
+        </div>
+        <div class="preview">
+          <div class="login-frame style-d">
+            <section class="security">
+              <h3>可信接入</h3>
+              <p>登录后同步身份、权限和本机文件责任链。</p>
+              <div class="metric-grid">
+                <div class="metric"><span>身份</span><strong>认证</strong></div>
+                <div class="metric"><span>文件</span><strong>归目</strong></div>
+                <div class="metric"><span>底账</span><strong>追踪</strong></div>
+                <div class="metric"><span>归档</span><strong>闭环</strong></div>
+              </div>
+            </section>
+            <section class="panel">
+              <h3>登录终端</h3>
+              <p>管理平台账号统一认证</p>
+              <div class="tabs" style="margin-top: 24px;"><button class="tab active">登录</button><button class="tab">注册</button></div>
+              <div class="field">登录账号</div>
+              <div class="field">登录密码</div>
+              <button class="primary">进入工作台</button>
+            </section>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const selectedText = document.getElementById('selectedText');
+    const options = Array.from(document.querySelectorAll('.option'));
+    const names = {
+      A: 'A. 政务办公型',
+      B: 'B. 极简清爽型',
+      C: 'C. 档案柜台型',
+      D: 'D. 深色安全型'
+    };
+
+    function selectOption(value) {
+      options.forEach((option) => {
+        option.dataset.selected = option.dataset.option === value ? 'true' : 'false';
+        option.querySelector('.choose').textContent = option.dataset.option === value ? '已选择' : '选择此风格';
+      });
+      selectedText.innerHTML = '当前选择：<strong>' + names[value] + '</strong>';
+      localStorage.setItem('scan-login-style-option', value);
+    }
+
+    options.forEach((option) => {
+      option.dataset.selected = 'false';
+      option.querySelector('.choose').addEventListener('click', () => selectOption(option.dataset.option));
+    });
+
+    const saved = localStorage.getItem('scan-login-style-option');
+    if (saved && names[saved]) {
+      selectOption(saved);
+    }
+  </script>
+</body>
+</html>

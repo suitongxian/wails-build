@@ -1,0 +1,123 @@
+name: scan-wails-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Run Go and frontend tests before packaging'
+        required: false
+        default: false
+        type: boolean
+      upload_release:
+        description: 'When the ref is a tag, also upload the Windows artifact to the GitHub release'
+        required: false
+        default: false
+        type: boolean
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-amd64:
+    name: Build Windows amd64
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    env:
+      WAILS_CLI_VERSION: v2.12.0
+      APP_NAME: data-asset-scan
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+
+      - name: Install Yarn
+        shell: pwsh
+        run: npm install -g yarn@1.22.22
+
+      - name: Install Wails CLI
+        shell: pwsh
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@${env:WAILS_CLI_VERSION}
+          "$env:USERPROFILE\go\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Print tool versions
+        shell: pwsh
+        run: |
+          go version
+          node --version
+          yarn --version
+          wails version
+
+      - name: Install frontend dependencies
+        shell: pwsh
+        run: yarn install --frozen-lockfile --production=false
+
+      - name: Run Go tests
+        if: github.event_name == 'workflow_dispatch' && inputs.run_tests
+        shell: pwsh
+        run: go test ./internal/repository ./internal/httpd
+
+      - name: Run frontend tests
+        if: github.event_name == 'workflow_dispatch' && inputs.run_tests
+        shell: pwsh
+        run: yarn test --run
+
+      - name: Build Windows package
+        shell: pwsh
+        run: wails build -platform windows/amd64 -clean
+
+      - name: Collect artifact
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          $shortSha = "${env:GITHUB_SHA}".Substring(0, 7)
+          $dist = "dist\scan-wails-build-windows-amd64-v$version-$shortSha"
+          New-Item -ItemType Directory -Force -Path $dist | Out-Null
+          Copy-Item "build\bin\*" $dist -Recurse -Force
+          Compress-Archive -Path "$dist\*" -DestinationPath "$dist.zip" -Force
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-wails-build-windows-amd64
+          path: |
+            dist/scan-wails-build-windows-amd64-*
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Attach Windows artifact to release
+    needs: windows-amd64
+    if: startsWith(github.ref, 'refs/tags/v') && (github.event_name == 'push' || inputs.upload_release)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: scan-wails-build-windows-amd64
+          path: dist
+
+      - name: Upload to GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*.zip
+          generate_release_notes: true

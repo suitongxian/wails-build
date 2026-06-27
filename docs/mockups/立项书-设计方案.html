@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>立项书弹窗 · 设计方案对比</title>
+<style>
+  :root{
+    --paper:#ffffff;
+    --ink:#1f2733;
+    --muted:#6b7686;
+    --line:#e3e8ef;
+    --req:#d4351c;
+    /* A 公文 */
+    --gov:#1b3a5b;
+    --gov-soft:#eef3f8;
+    /* B 商务 */
+    --biz:#0e7a6b;
+    --biz-soft:#e8f5f2;
+    /* C 表单 */
+    --sheet:#3949ab;
+    --sheet-soft:#eef0fb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#eaedf2;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 80px;
+  }
+  .pagehead{max-width:880px;margin:0 auto 8px;}
+  .pagehead h1{font-size:20px;margin:0 0 4px;}
+  .pagehead p{margin:0;color:var(--muted);font-size:13px;}
+  .variant{max-width:880px;margin:40px auto 0;}
+  .variant-label{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;padding-left:4px;}
+  .variant-label .tag{font-size:12px;font-weight:700;color:#fff;background:var(--ink);border-radius:4px;padding:2px 8px;}
+  .variant-label h2{font-size:16px;margin:0;}
+  .variant-label span{font-size:12px;color:var(--muted);}
+
+  /* 通用弹窗外壳 */
+  .dlg{background:var(--paper);border-radius:10px;box-shadow:0 12px 40px rgba(20,30,50,.18);overflow:hidden;}
+  .req{color:var(--req);font-weight:700;}
+  .field-label{font-size:12.5px;color:var(--muted);margin:0 0 5px;font-weight:600;}
+  .inp{
+    width:100%;height:38px;border:1px solid var(--line);border-radius:6px;background:#fff;
+    padding:0 11px;font-size:13.5px;color:var(--ink);display:flex;align-items:center;
+  }
+  .inp.ro{background:#f5f7fa;color:#55606f;}
+  .inp.sel::after{content:"▾";margin-left:auto;color:#9aa4b2;}
+  .ta{
+    width:100%;min-height:64px;border:1px solid var(--line);border-radius:6px;background:#fff;
+    padding:9px 11px;font-size:13px;color:#3b4554;line-height:1.7;
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;}
+  .radios{display:flex;gap:10px;flex-wrap:wrap;}
+  .radio{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:13px;color:#475061;cursor:default;}
+  .radio .dot{width:13px;height:13px;border-radius:50%;border:2px solid #c2c9d4;display:inline-block;}
+  .radio.on{border-color:currentColor;background:#fff;font-weight:600;}
+  .radio.on .dot{border-color:currentColor;background:currentColor;box-shadow:inset 0 0 0 2px #fff;}
+  .btn{height:36px;border-radius:6px;padding:0 18px;font-size:13.5px;border:none;cursor:default;font-weight:600;}
+  .btn-text{background:transparent;color:var(--muted);}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:#46505f;}
+  .chip-draft{font-size:11.5px;font-weight:700;color:#8a6d00;background:#fff3cd;border:1px solid #ffe49c;border-radius:4px;padding:2px 8px;}
+
+  /* ============ 方案 A 公文式 ============ */
+  .A .doc-head{text-align:center;padding:26px 32px 16px;border-bottom:2px solid var(--gov);}
+  .A .doc-title{font-size:26px;font-weight:800;letter-spacing:10px;color:var(--gov);margin:0 0 6px;}
+  .A .doc-sub{font-size:11px;letter-spacing:3px;color:#9aa4b2;text-transform:uppercase;display:flex;justify-content:center;align-items:center;gap:10px;}
+  .A .doc-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:10px 32px;border-bottom:1px dashed var(--line);}
+  .A .body{padding:8px 32px 4px;}
+  .A .sec{padding:16px 0;border-bottom:1px solid #f0f3f7;}
+  .A .sec:last-child{border-bottom:none;}
+  .A .sec-h{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--gov);margin:0 0 13px;}
+  .A .sec-h::before{content:"";width:4px;height:15px;background:var(--gov);border-radius:2px;}
+  .A .foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 32px;border-top:1px solid var(--line);background:var(--gov-soft);}
+  .A .btn-primary{background:var(--gov);color:#fff;}
+  .A .radio.on{color:var(--gov);}
+
+  /* ============ 方案 B 商务卡片 ============ */
+  .B .head{display:flex;align-items:center;gap:12px;padding:18px 24px;background:linear-gradient(90deg,var(--biz),#11998e);color:#fff;}
+  .B .head .ic{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .B .head h3{margin:0;font-size:17px;font-weight:700;}
+  .B .head p{margin:2px 0 0;font-size:11.5px;opacity:.85;}
+  .B .body{padding:20px 24px 6px;background:#f7f9fb;}
+  .B .card{background:#fff;border:1px solid #eef1f5;border-radius:10px;padding:15px 16px;margin-bottom:14px;}
+  .B .sec-h{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:#243041;margin:0 0 13px;}
+  .B .sec-h .num{width:22px;height:22px;border-radius:50%;background:var(--biz-soft);color:var(--biz);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .B .foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid #eef1f5;background:#fff;}
+  .B .btn-primary{background:var(--biz);color:#fff;}
+  .B .radio.on{color:var(--biz);}
+
+  /* ============ 方案 C 表单（左侧索引） ============ */
+  .C .head{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--line);}
+  .C .head h3{margin:0;font-size:16px;font-weight:700;color:var(--sheet);letter-spacing:1px;}
+  .C .head .badge{font-size:11px;color:var(--sheet);background:var(--sheet-soft);border-radius:4px;padding:3px 9px;font-weight:700;}
+  .C .split{display:grid;grid-template-columns:148px 1fr;}
+  .C .rail{background:#fafbfe;border-right:1px solid var(--line);padding:14px 0;}
+  .C .rail a{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;color:#6b7686;}
+  .C .rail a .n{width:20px;height:20px;border-radius:50%;border:1px solid #cfd6e2;font-size:11px;display:flex;align-items:center;justify-content:center;color:#8a94a3;}
+  .C .rail a.on{color:var(--sheet);font-weight:700;background:var(--sheet-soft);border-right:2px solid var(--sheet);}
+  .C .rail a.on .n{background:var(--sheet);color:#fff;border-color:var(--sheet);}
+  .C .content{padding:18px 24px 4px;}
+  .C .sec{margin-bottom:18px;}
+  .C .sec-h{font-size:13.5px;font-weight:700;color:#243041;margin:0 0 12px;padding-bottom:7px;border-bottom:1px solid #f0f3f7;}
+  .C .foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid var(--line);}
+  .C .btn-primary{background:var(--sheet);color:#fff;}
+  .C .radio.on{color:var(--sheet);}
+  .mt{margin-top:14px;}
+</style>
+</head>
+<body>
+
+<div class="pagehead">
+  <h1>「立项书」弹窗 · 三个设计方案对比</h1>
+  <p>同一份内容、三种正式风格。挑一个（或告诉我要 A 的某点 + B 的某点），我就照着改进真实页面（纯样式，逻辑/接口/测试不动）。</p>
+</div>
+
+<!-- ============================ 方案 A ============================ -->
+<div class="variant A">
+  <div class="variant-label"><span class="tag" style="background:var(--gov)">方案 A</span><h2>公文式立项书</h2><span>居中大标题 + 文档抬头 + 编号/日期，最“正式公文”</span></div>
+  <div class="dlg">
+    <div class="doc-head">
+      <div class="doc-title">项 目 立 项 书</div>
+      <div class="doc-sub"><span>PROJECT&nbsp;INITIATION&nbsp;FORM</span><span class="chip-draft">草稿</span></div>
+    </div>
+    <div class="doc-meta"><span>编号：GDJT-2026-017</span><span>拟制日期：2026-06-09</span></div>
+    <div class="body">
+      <div class="sec">
+        <div class="sec-h">一、基本信息</div>
+        <div class="grid2">
+          <div><div class="field-label">项目名称 <span class="req">*</span></div><div class="inp">城市轨道交通建设档案数字化项目</div></div>
+          <div><div class="field-label">项目代号</div><div class="inp">GDJT-2026-017</div></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-h">二、责任主体</div>
+        <div class="grid2">
+          <div><div class="field-label">项目负责人 <span class="req">*</span></div><div class="inp sel">张三（zhangsan）</div></div>
+          <div><div class="field-label">所属部门 <span class="req">*</span></div><div class="inp ro">第一研究院（自动带出）</div></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-h">三、安全定级</div>
+        <div class="field-label">敏感级别 <span class="req">*</span></div>
+        <div class="radios">
+          <span class="radio"><span class="dot"></span>核心</span>
+          <span class="radio on"><span class="dot"></span>重要</span>
+          <span class="radio"><span class="dot"></span>一般</span>
+        </div>
+        <div class="mt"><div class="field-label">数据权属</div><div class="inp">市轨道交通建设管理局</div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-h">四、立项依据</div>
+        <div class="ta">依据《XX市政务数据资源管理办法》及上级《2026年度数字化建设计划》批文，开展本项目立项。</div>
+      </div>
+      <div class="sec">
+        <div class="sec-h">五、项目简介</div>
+        <div class="ta">对城市轨道交通建设全周期形成的勘察、设计、施工、验收等档案进行数字化采集、分级与入库治理。</div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="btn btn-text">取消</button>
+      <button class="btn btn-ghost">存草稿</button>
+      <button class="btn btn-primary">发&nbsp;布</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 方案 B ============================ -->
+<div class="variant B">
+  <div class="variant-label"><span class="tag" style="background:var(--biz)">方案 B</span><h2>商务卡片式</h2><span>彩色抬头条 + 分组白卡片 + 圆形编号，现代专业</span></div>
+  <div class="dlg">
+    <div class="head">
+      <div class="ic">📋</div>
+      <div style="flex:1">
+        <h3>新建立项书</h3>
+        <p>填写后可存草稿或直接发布，发布即同步至管理端</p>
+      </div>
+      <span class="chip-draft">草稿</span>
+    </div>
+    <div class="body">
+      <div class="card">
+        <div class="sec-h"><span class="num">1</span>基本信息</div>
+        <div class="grid2">
+          <div><div class="field-label">项目名称 <span class="req">*</span></div><div class="inp">城市轨道交通建设档案数字化项目</div></div>
+          <div><div class="field-label">项目代号</div><div class="inp">GDJT-2026-017</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-h"><span class="num">2</span>责任主体</div>
+        <div class="grid2">
+          <div><div class="field-label">项目负责人 <span class="req">*</span></div><div class="inp sel">张三（zhangsan）</div></div>
+          <div><div class="field-label">所属部门 <span class="req">*</span></div><div class="inp ro">第一研究院（自动带出）</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-h"><span class="num">3</span>安全定级</div>
+        <div class="grid2">
+          <div>
+            <div class="field-label">敏感级别 <span class="req">*</span></div>
+            <div class="radios">
+              <span class="radio"><span class="dot"></span>核心</span>
+              <span class="radio on"><span class="dot"></span>重要</span>
+              <span class="radio"><span class="dot"></span>一般</span>
+            </div>
+          </div>
+          <div><div class="field-label">数据权属</div><div class="inp">市轨道交通建设管理局</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-h"><span class="num">4</span>立项依据</div>
+        <div class="ta">依据《XX市政务数据资源管理办法》及上级《2026年度数字化建设计划》批文，开展本项目立项。</div>
+      </div>
+      <div class="card">
+        <div class="sec-h"><span class="num">5</span>项目简介</div>
+        <div class="ta">对城市轨道交通建设全周期形成的勘察、设计、施工、验收等档案进行数字化采集、分级与入库治理。</div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="btn btn-text">取消</button>
+      <button class="btn btn-ghost">存草稿</button>
+      <button class="btn btn-primary">发布</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 方案 C ============================ -->
+<div class="variant C">
+  <div class="variant-label"><span class="tag" style="background:var(--sheet)">方案 C</span><h2>表单 · 左侧索引</h2><span>左栏五个板块导航 + 右侧紧凑表单，效率型正式</span></div>
+  <div class="dlg">
+    <div class="head">
+      <h3>项目立项书</h3>
+      <span class="badge">草稿</span>
+    </div>
+    <div class="split">
+      <div class="rail">
+        <a class="on"><span class="n">1</span>基本信息</a>
+        <a><span class="n">2</span>责任主体</a>
+        <a><span class="n">3</span>安全定级</a>
+        <a><span class="n">4</span>立项依据</a>
+        <a><span class="n">5</span>项目简介</a>
+      </div>
+      <div class="content">
+        <div class="sec">
+          <div class="sec-h">一、基本信息</div>
+          <div class="grid2">
+            <div><div class="field-label">项目名称 <span class="req">*</span></div><div class="inp">城市轨道交通建设档案数字化项目</div></div>
+            <div><div class="field-label">项目代号</div><div class="inp">GDJT-2026-017</div></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sec-h">二、责任主体</div>
+          <div class="grid2">
+            <div><div class="field-label">项目负责人 <span class="req">*</span></div><div class="inp sel">张三（zhangsan）</div></div>
+            <div><div class="field-label">所属部门 <span class="req">*</span></div><div class="inp ro">第一研究院（自动带出）</div></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sec-h">三、安全定级</div>
+          <div class="grid2">
+            <div>
+              <div class="field-label">敏感级别 <span class="req">*</span></div>
+              <div class="radios">
+                <span class="radio"><span class="dot"></span>核心</span>
+                <span class="radio on"><span class="dot"></span>重要</span>
+                <span class="radio"><span class="dot"></span>一般</span>
+              </div>
+            </div>
+            <div><div class="field-label">数据权属</div><div class="inp">市轨道交通建设管理局</div></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sec-h">四、立项依据</div>
+          <div class="ta">依据《XX市政务数据资源管理办法》及上级《2026年度数字化建设计划》批文，开展本项目立项。</div>
+        </div>
+        <div class="sec">
+          <div class="sec-h">五、项目简介</div>
+          <div class="ta">对城市轨道交通建设全周期形成的勘察、设计、施工、验收等档案进行数字化采集、分级与入库治理。</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="btn btn-text">取消</button>
+      <button class="btn btn-ghost">存草稿</button>
+      <button class="btn btn-primary">发布</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

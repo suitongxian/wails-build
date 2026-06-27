@@ -1,0 +1,54 @@
+{
+  "families": [
+    {
+      "primary_content_sign": "70F58B1F5CF8B4D7861C3BF89878EBB71B3DBA61A06414DABF1172914888EE15",
+      "primary_path": "exact_a.txt",
+      "algorithm": "exact_hash",
+      "highest_score": 1,
+      "members": [
+        {
+          "content_sign": "08A74AE17191D7BF356DA31624BD9CA9F8484DF037BF00E46190581E0B4AB630",
+          "path": "report_v1.txt",
+          "relation": "process_version",
+          "score": 0.7874599944163777,
+          "is_primary": false
+        },
+        {
+          "content_sign": "39D331D6A0F387433F1729C9C6B68F35AF5D3F63F675A8A8C05206821F0C67F2",
+          "path": "report_v2.txt",
+          "relation": "process_version",
+          "score": 0.7542624662202966,
+          "is_primary": false
+        },
+        {
+          "content_sign": "47291546B5EFD3B08556787174BD34664B1B0067B5464E1B909E7EFB398B60C2",
+          "path": "near_b.txt",
+          "relation": "process_version",
+          "score": 0.8692518010983387,
+          "is_primary": false
+        },
+        {
+          "content_sign": "70F58B1F5CF8B4D7861C3BF89878EBB71B3DBA61A06414DABF1172914888EE15",
+          "path": "exact_a.txt",
+          "relation": "same_content",
+          "score": 1,
+          "is_primary": true
+        },
+        {
+          "content_sign": "70F58B1F5CF8B4D7861C3BF89878EBB71B3DBA61A06414DABF1172914888EE15",
+          "path": "exact_b.txt",
+          "relation": "same_content",
+          "score": 1,
+          "is_primary": false
+        },
+        {
+          "content_sign": "B6092E4D3C949EA300DDB437B1C7AB091B8F47370382072A0D3FC601EAB5C2B8",
+          "path": "near_a.txt",
+          "relation": "process_version",
+          "score": 0.8733517956729245,
+          "is_primary": false
+        }
+      ]
+    }
+  ]
+}

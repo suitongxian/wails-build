@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>组建团队 v2 · 原型</title>
+<style>
+  :root{
+    --indigo:#3f51b5; --indigo-d:#303f9f; --bg:#f4f6fa; --card:#fff;
+    --line:#e3e8f0; --ink:#1b2536; --muted:#7a869a; --code-bg:#eef2f7;
+    --primary:#1976d2; --green:#2e7d32; --grey:#9aa5b5;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:14px;}
+  header{background:linear-gradient(90deg,var(--indigo),var(--indigo-d));color:#fff;padding:14px 22px;
+    display:flex;align-items:center;gap:12px;}
+  header h1{font-size:17px;margin:0;font-weight:600;}
+  header .sub{font-size:12px;opacity:.85;}
+  .tabs{display:flex;gap:4px;padding:14px 22px 0;background:var(--bg);border-bottom:1px solid var(--line);}
+  .tab{padding:9px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-weight:600;color:var(--muted);
+    border:1px solid transparent;border-bottom:none;background:transparent;}
+  .tab.active{background:var(--card);color:var(--indigo);border-color:var(--line);}
+  .wrap{padding:22px;max-width:1080px;margin:0 auto;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;}
+  .card-title{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:600;display:flex;align-items:center;gap:8px;}
+  .card-sub{padding:0 18px 14px;color:var(--muted);font-size:12.5px;margin-top:-4px;}
+  .card-body{padding:16px 18px;}
+
+  .btn{border:none;border-radius:8px;padding:8px 16px;font-size:13.5px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+  .btn-primary{background:var(--indigo);color:#fff;}
+  .btn-primary:hover{background:var(--indigo-d);}
+  .btn-ghost{background:transparent;color:var(--indigo);border:1px solid var(--line);}
+  .btn-ghost:hover{background:#f0f2fa;}
+  .btn-sm{padding:4px 10px;font-size:12px;border-radius:6px;}
+  .btn-add{background:#e8eaf6;color:var(--indigo);}
+  .btn-add:hover{background:#dfe2f5;}
+  .btn-x{background:transparent;color:var(--grey);border:1px solid var(--line);}
+  .btn-x:hover{background:#fbecec;color:#c62828;border-color:#f3c9c9;}
+
+  .code{display:inline-block;background:var(--code-bg);color:#1b3a5b;border:1px solid #d6deea;
+    border-radius:4px;padding:0 6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;}
+  .chip{display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;background:#eef2f7;color:#456;}
+  .chip.role{background:#ede7f6;color:#5e35b1;}
+  .chip.unit{background:#e3f2fd;color:#1565c0;}
+
+  /* 双栏 */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .col-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .col-head .t{font-weight:600;}
+  .col-head .n{font-size:12px;color:var(--muted);}
+  .search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;margin-bottom:10px;}
+  .search:focus{outline:none;border-color:var(--indigo);}
+  .list{border:1px solid var(--line);border-radius:10px;max-height:360px;overflow:auto;}
+  .list.empty{display:flex;align-items:center;justify-content:center;color:var(--grey);font-size:13px;padding:40px 0;}
+  .row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #f0f3f8;}
+  .row:last-child{border-bottom:none;}
+  .row.disabled{opacity:.4;}
+  .ava{width:32px;height:32px;border-radius:50%;background:var(--indigo);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto;}
+  .ava.team{background:#5e35b1;}
+  .who{flex:1;min-width:0;}
+  .who .nm{font-weight:600;}
+  .who .nm small{font-weight:400;color:var(--muted);margin-left:5px;}
+  .who .meta{margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;}
+
+  /* 分工 */
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-weight:600;margin-bottom:7px;}
+  .assign-bar{display:flex;gap:10px;align-items:stretch;}
+  .selectbox{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-height:42px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#fff;}
+  .selectbox .ph{color:var(--grey);}
+  .tag{background:#e8eaf6;color:var(--indigo);border-radius:6px;padding:3px 8px;font-size:12.5px;display:inline-flex;gap:6px;align-items:center;}
+  .tag b{font-weight:600;}
+  .tag .rm{cursor:pointer;color:#7986cb;}
+  .menu{border:1px solid var(--line);border-radius:8px;margin-top:8px;max-height:240px;overflow:auto;}
+  .menu .row{cursor:pointer;}
+  .menu .row:hover{background:#f5f7fc;}
+  .src-note{font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:6px;}
+
+  /* 临时拉人覆盖面板 */
+  .overlay{position:fixed;inset:0;background:rgba(20,28,48,.4);display:none;align-items:center;justify-content:center;z-index:50;}
+  .overlay.show{display:flex;}
+  .sheet{background:#fff;border-radius:14px;width:560px;max-width:92vw;max-height:86vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .sheet-head{padding:16px 18px;border-bottom:1px solid var(--line);font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+  .sheet-body{padding:16px 18px;overflow:auto;}
+  .sheet-foot{padding:12px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;}
+  .hint{background:#fff8e1;border:1px solid #ffe6a0;color:#8a6d1a;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:12px;}
+
+  /* snackbar */
+  .snackbar{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(80px);
+    background:#323a4d;color:#fff;padding:11px 20px;border-radius:8px;font-size:13.5px;opacity:0;transition:.25s;z-index:60;}
+  .snackbar.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+  .note{background:#eef2fb;border:1px solid #d7e0f5;border-radius:10px;padding:12px 16px;color:#3a4a6b;font-size:12.5px;margin-bottom:18px;}
+  .note b{color:var(--indigo);}
+</style>
+</head>
+<body>
+<header>
+  <span style="font-size:22px;">👥</span>
+  <div>
+    <h1>组建团队 v2 · 交互原型</h1>
+    <div class="sub">团队 = 实际班底 · 分工只从团队选人 · 缺人显式补员</div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="build">① 组建团队（双栏）</button>
+  <button class="tab" data-tab="assign">② 分工（只从团队选 + 临时拉人）</button>
+</div>
+
+<div class="wrap">
+  <!-- ============ 面板①：组建团队 ============ -->
+  <div class="panel active" id="panel-build">
+    <div class="note">
+      项目负责人 / 环节责任人共用此组件。左侧从<b>全体注册用户</b>挑人入队,右侧是<b>团队全貌</b>。
+      每行可见 <b>姓名 / username / 单位 / 部门 / 角色</b>。
+    </div>
+    <div class="card">
+      <div class="card-title">🛠️ 组建团队 · 婚姻法登记数据治理项目 <span class="code">XM-2026-0001</span></div>
+      <div class="card-sub">关联模版前先把人拉齐;此名单将成为后续分工的唯一默认人池。</div>
+      <div class="card-body">
+        <div class="two-col">
+          <!-- 左：候选人 -->
+          <div>
+            <div class="col-head"><span class="t">候选人（全体注册用户）</span><span class="n" id="cand-n"></span></div>
+            <input class="search" id="cand-search" placeholder="🔍 搜索 姓名 / username / 单位 / 部门" />
+            <div class="list" id="cand-list"></div>
+          </div>
+          <!-- 右：当前团队 -->
+          <div>
+            <div class="col-head"><span class="t">当前团队</span><span class="n" id="team-n"></span></div>
+            <input class="search" id="team-search" placeholder="🔍 在团队内查找" />
+            <div class="list" id="team-list"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+          <button class="btn btn-ghost">取消</button>
+          <button class="btn btn-primary" id="save-team">保存团队</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 面板②：分工 ============ -->
+  <div class="panel" id="panel-assign">
+    <div class="note">
+      分工时选人控件<b>只显示团队成员</b>。人不够时点 <b>「+ 临时拉人入队」</b> 搜全体注册用户补员,
+      补进来的人<b>永久入队</b>,立即可选,后续其它环节/任务也能用。
+    </div>
+    <div class="card">
+      <div class="card-title">🧩 指派环节责任人 · 收集环节 <span class="code">S1</span></div>
+      <div class="card-sub">（项目负责人视角;环节责任人指派文件任务时同一套交互）</div>
+      <div class="card-body">
+        <div class="field">
+          <label>环节责任人</label>
+          <div class="assign-bar">
+            <div class="selectbox" id="picked-box"><span class="ph">点击下方团队成员选择…</span></div>
+            <button class="btn btn-ghost" id="open-temp">+ 临时拉人入队</button>
+          </div>
+          <div class="src-note">🔒 候选来源：<b style="margin:0 4px;">本项目团队</b>（<span id="assign-src-n"></span> 人）</div>
+          <div class="menu" id="assign-menu"></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
+          <button class="btn btn-ghost">取消</button>
+          <button class="btn btn-primary">确认指派</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 临时拉人覆盖面板 -->
+<div class="overlay" id="temp-overlay">
+  <div class="sheet">
+    <div class="sheet-head">+ 临时拉人入队 <span style="cursor:pointer;color:var(--grey);" id="temp-close">✕</span></div>
+    <div class="sheet-body">
+      <div class="hint">⚠️ 在此选择的人将<b>永久加入本项目团队</b>,而不仅用于这次分工。</div>
+      <input class="search" id="temp-search" placeholder="🔍 搜索 姓名 / username / 单位 / 部门" />
+      <div class="list" id="temp-list"></div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn btn-ghost" id="temp-cancel">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="snackbar" id="snackbar"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- 模拟数据 ----
+  var ALL_USERS = [
+    {username:"zhangsan", name:"张三", unit:"第一研究院", dept:"档案管理处", role:"管理员"},
+    {username:"lisi",     name:"李四", unit:"第一研究院", dept:"收集科",     role:"普通成员"},
+    {username:"wangliu",  name:"王六", unit:"第一研究院", dept:"审核科",     role:"普通成员"},
+    {username:"wangwu",   name:"王五", unit:"第一研究院", dept:"法务科",     role:"普通成员"},
+    {username:"zhaoqi",   name:"赵七", unit:"第二研究院", dept:"收集科",     role:"普通成员"},
+    {username:"sunba",    name:"孙八", unit:"第二研究院", dept:"整编科",     role:"科室负责人"},
+    {username:"zhoujiu",  name:"周九", unit:"第三研究院", dept:"利用科",     role:"普通成员"},
+    {username:"wushi",    name:"吴十", unit:"第三研究院", dept:"鉴定科",     role:"普通成员"}
+  ];
+  // 初始已入队的人(username 集合)
+  var team = ["zhangsan","lisi","wangliu"];
+  // 分工已选(单选示例)
+  var picked = null;
+
+  function byName(u){ return u.name; }
+  function userOf(username){
+    for(var i=0;i<ALL_USERS.length;i++){ if(ALL_USERS[i].username===username) return ALL_USERS[i]; }
+    return null;
+  }
+  function match(u, q){
+    if(!q) return true;
+    q = q.toLowerCase();
+    return (u.name+u.username+u.unit+u.dept).toLowerCase().indexOf(q) >= 0;
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+
+  function rowHTML(u, opts){
+    opts = opts || {};
+    var inTeam = team.indexOf(u.username) >= 0;
+    var ava = '<div class="ava'+(opts.teamAva?' team':'')+'">'+esc(u.name.slice(0,1))+'</div>';
+    var who = '<div class="who"><div class="nm">'+esc(u.name)+'<small>'+esc(u.username)+'</small></div>'+
+              '<div class="meta"><span class="chip unit">'+esc(u.unit)+'</span>'+
+              '<span class="chip">'+esc(u.dept)+'</span>'+
+              '<span class="chip role">'+esc(u.role)+'</span></div></div>';
+    var action = "";
+    if(opts.mode==="cand"){
+      action = inTeam
+        ? '<span class="chip" style="background:#e8f5e9;color:#2e7d32;">已在队</span>'
+        : '<button class="btn btn-sm btn-add" data-add="'+u.username+'">+ 入队</button>';
+    } else if(opts.mode==="team"){
+      action = '<button class="btn btn-sm btn-x" data-remove="'+u.username+'">移除</button>';
+    } else if(opts.mode==="temp"){
+      action = inTeam
+        ? '<span class="chip" style="background:#e8f5e9;color:#2e7d32;">已在队</span>'
+        : '<button class="btn btn-sm btn-add" data-temp-add="'+u.username+'">+ 加入团队</button>';
+    } else if(opts.mode==="menu"){
+      var sel = picked===u.username;
+      action = sel ? '<span class="chip" style="background:#e8eaf6;color:#3f51b5;">已选</span>' : '';
+    }
+    var cls = "row" + ((opts.mode==="cand" && inTeam) ? " disabled" : "");
+    return '<div class="'+cls+'"'+(opts.dataset||"")+'>'+ava+who+action+'</div>';
+  }
+
+  // ---- 组建团队渲染 ----
+  function renderBuild(){
+    var cq = document.getElementById("cand-search").value;
+    var tq = document.getElementById("team-search").value;
+
+    var cand = ALL_USERS.filter(function(u){ return match(u,cq); });
+    var candHTML = cand.map(function(u){ return rowHTML(u,{mode:"cand"}); }).join("");
+    var candEl = document.getElementById("cand-list");
+    candEl.className = "list" + (cand.length?"":" empty");
+    candEl.innerHTML = cand.length ? candHTML : "无匹配用户";
+    document.getElementById("cand-n").textContent = ALL_USERS.length + " 名注册用户";
+
+    var teamUsers = team.map(userOf).filter(Boolean).filter(function(u){ return match(u,tq); });
+    var teamHTML = teamUsers.map(function(u){ return rowHTML(u,{mode:"team",teamAva:true}); }).join("");
+    var teamEl = document.getElementById("team-list");
+    teamEl.className = "list" + (teamUsers.length?"":" empty");
+    teamEl.innerHTML = teamUsers.length ? teamHTML : "团队还没有成员，从左侧添加";
+    document.getElementById("team-n").textContent = team.length + " 人";
+  }
+
+  // ---- 分工渲染 ----
+  function renderAssign(){
+    document.getElementById("assign-src-n").textContent = team.length;
+
+    var box = document.getElementById("picked-box");
+    if(picked){
+      var u = userOf(picked);
+      box.innerHTML = '<span class="tag"><b>'+esc(u.name)+'</b> '+esc(u.dept)+
+        ' <span class="rm" data-unpick="1">✕</span></span>';
+    } else {
+      box.innerHTML = '<span class="ph">点击下方团队成员选择…</span>';
+    }
+
+    var teamUsers = team.map(userOf).filter(Boolean);
+    var menu = document.getElementById("assign-menu");
+    menu.innerHTML = teamUsers.map(function(u){
+      return rowHTML(u,{mode:"menu", dataset:' data-pick="'+u.username+'"'});
+    }).join("");
+  }
+
+  // ---- 临时拉人渲染 ----
+  function renderTemp(){
+    var q = document.getElementById("temp-search").value;
+    var list = ALL_USERS.filter(function(u){ return match(u,q); });
+    var el = document.getElementById("temp-list");
+    el.className = "list" + (list.length?"":" empty");
+    el.innerHTML = list.length
+      ? list.map(function(u){ return rowHTML(u,{mode:"temp"}); }).join("")
+      : "无匹配用户";
+  }
+
+  function snack(msg){
+    var s = document.getElementById("snackbar");
+    s.textContent = msg;
+    s.classList.add("show");
+    clearTimeout(snack._t);
+    snack._t = setTimeout(function(){ s.classList.remove("show"); }, 2200);
+  }
+
+  // ---- 事件绑定 ----
+  // tab 切换
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(t){
+    t.addEventListener("click", function(){
+      document.querySelectorAll(".tab").forEach(function(x){ x.classList.remove("active"); });
+      document.querySelectorAll(".panel").forEach(function(x){ x.classList.remove("active"); });
+      t.classList.add("active");
+      document.getElementById("panel-"+t.dataset.tab).classList.add("active");
+      if(t.dataset.tab==="assign") renderAssign();
+    });
+  });
+
+  document.getElementById("cand-search").addEventListener("input", renderBuild);
+  document.getElementById("team-search").addEventListener("input", renderBuild);
+
+  // 组队：入队 / 移除（事件委托）
+  document.getElementById("cand-list").addEventListener("click", function(e){
+    var b = e.target.closest("[data-add]"); if(!b) return;
+    var un = b.getAttribute("data-add");
+    if(team.indexOf(un)<0){ team.push(un); snack("已加入团队：" + userOf(un).name); }
+    renderBuild();
+  });
+  document.getElementById("team-list").addEventListener("click", function(e){
+    var b = e.target.closest("[data-remove]"); if(!b) return;
+    var un = b.getAttribute("data-remove");
+    team = team.filter(function(x){ return x!==un; });
+    if(picked===un) picked=null;
+    snack("已移出团队：" + userOf(un).name);
+    renderBuild();
+  });
+  document.getElementById("save-team").addEventListener("click", function(){
+    snack("团队已保存，共 " + team.length + " 人");
+  });
+
+  // 分工：选人 / 取消选
+  document.getElementById("assign-menu").addEventListener("click", function(e){
+    var b = e.target.closest("[data-pick]"); if(!b) return;
+    picked = b.getAttribute("data-pick");
+    renderAssign();
+  });
+  document.getElementById("picked-box").addEventListener("click", function(e){
+    if(e.target.closest("[data-unpick]")){ picked=null; renderAssign(); }
+  });
+
+  // 临时拉人面板
+  var overlay = document.getElementById("temp-overlay");
+  document.getElementById("open-temp").addEventListener("click", function(){
+    document.getElementById("temp-search").value = "";
+    renderTemp(); overlay.classList.add("show");
+  });
+  function closeTemp(){ overlay.classList.remove("show"); }
+  document.getElementById("temp-close").addEventListener("click", closeTemp);
+  document.getElementById("temp-cancel").addEventListener("click", closeTemp);
+  overlay.addEventListener("click", function(e){ if(e.target===overlay) closeTemp(); });
+  document.getElementById("temp-search").addEventListener("input", renderTemp);
+  document.getElementById("temp-list").addEventListener("click", function(e){
+    var b = e.target.closest("[data-temp-add]"); if(!b) return;
+    var un = b.getAttribute("data-temp-add");
+    if(team.indexOf(un)<0){ team.push(un); snack("已将 " + userOf(un).name + " 永久加入团队"); }
+    renderTemp(); renderAssign(); renderBuild();
+  });
+
+  // 初次渲染
+  renderBuild();
+  renderAssign();
+})();
+</script>
+</body>
+</html>
